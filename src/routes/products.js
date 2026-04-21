@@ -2,10 +2,15 @@ const express = require("express");
 const productService = require("../services/productService");
 
 const router = express.Router();
-
+ 
+//Add pagination to GET/products with query parameter limit, e.g. GET/products?limit=10
 router.get("/", (req, res) => {
-  res.json(productService.list());
+  const limit = Number(req.query.limit || 0);
+  const all = productService.list();
+  const result = limit > 0 ? all.slice(0, limit) : all;
+  res.json(result);
 });
+
 
 router.get("/:id", (req, res) => {
   const product = productService.get(req.params.id);
